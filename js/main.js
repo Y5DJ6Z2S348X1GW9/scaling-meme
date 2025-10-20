@@ -55,7 +55,6 @@ function loadUserPreferences() {
     // 加载其他设置
     const preferences = Utils.storage.get('preferences', {
         outputFormat: 'jpg',
-        disguiseImage: 'default',
         autoDownload: true,
         showNotifications: true
     });
@@ -66,19 +65,15 @@ function loadUserPreferences() {
         if (formatSelect) formatSelect.value = preferences.outputFormat;
     }
 
-    if (preferences.disguiseImage) {
-        const imageSelect = document.getElementById('disguiseImageSelect');
-        if (imageSelect) imageSelect.value = preferences.disguiseImage;
-    }
-
     return preferences;
 }
 
 // 保存用户偏好设置
 function saveUserPreferences() {
+    const outputFormat = document.getElementById('outputFormat');
+    
     const preferences = {
-        outputFormat: document.getElementById('outputFormat').value,
-        disguiseImage: document.getElementById('disguiseImageSelect').value,
+        outputFormat: outputFormat ? outputFormat.value : 'jpg',
         autoDownload: true,
         showNotifications: true,
         lastUsed: Date.now()
@@ -90,8 +85,10 @@ function saveUserPreferences() {
 // 初始化事件监听器
 function initializeEventListeners() {
     // 保存设置变更
-    document.getElementById('outputFormat').addEventListener('change', saveUserPreferences);
-    document.getElementById('disguiseImageSelect').addEventListener('change', saveUserPreferences);
+    const outputFormat = document.getElementById('outputFormat');
+    if (outputFormat) {
+        outputFormat.addEventListener('change', saveUserPreferences);
+    }
 
     // 键盘快捷键
     document.addEventListener('keydown', handleKeyboardShortcuts);
@@ -117,7 +114,10 @@ function handleKeyboardShortcuts(e) {
     // Ctrl/Cmd + O: 打开文件
     if ((e.ctrlKey || e.metaKey) && e.key === 'o') {
         e.preventDefault();
-        document.getElementById('fileInput').click();
+        const targetFileInput = document.getElementById('targetFileInput');
+        if (targetFileInput) {
+            targetFileInput.click();
+        }
     }
 
     // Ctrl/Cmd + S: 开始处理
@@ -148,7 +148,9 @@ function handleKeyboardShortcuts(e) {
     // F1: 显示帮助
     if (e.key === 'F1') {
         e.preventDefault();
-        window.uiController.switchPage('help');
+        if (window.uiController && window.uiController.switchPage) {
+            window.uiController.switchPage('help');
+        }
     }
 }
 

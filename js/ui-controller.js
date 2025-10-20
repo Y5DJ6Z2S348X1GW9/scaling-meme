@@ -58,43 +58,62 @@ class UIController {
     // 初始化事件监听器
     initializeEventListeners() {
         // 导航切换
-        this.elements.navButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => this.switchPage(e.target.dataset.page));
-        });
+        if (this.elements.navButtons && this.elements.navButtons.length > 0) {
+            this.elements.navButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => this.switchPage(e.target.dataset.page));
+            });
+        }
 
         // 目标文件上传
-        this.elements.selectTargetBtn.addEventListener('click', () => {
-            this.elements.targetFileInput.click();
-        });
+        if (this.elements.selectTargetBtn) {
+            this.elements.selectTargetBtn.addEventListener('click', () => {
+                this.elements.targetFileInput.click();
+            });
+        }
 
-        this.elements.targetFileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                this.handleTargetFileSelect(e.target.files[0]);
-            }
-        });
+        if (this.elements.targetFileInput) {
+            this.elements.targetFileInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    this.handleTargetFileSelect(e.target.files[0]);
+                }
+            });
+        }
 
-        this.elements.removeTargetBtn.addEventListener('click', () => {
-            this.clearTargetFile();
-        });
+        if (this.elements.removeTargetBtn) {
+            this.elements.removeTargetBtn.addEventListener('click', () => {
+                this.clearTargetFile();
+            });
+        }
 
         // 封面图片上传
-        this.elements.selectCoverBtn.addEventListener('click', () => {
-            this.elements.coverImageInput.click();
-        });
+        if (this.elements.selectCoverBtn) {
+            this.elements.selectCoverBtn.addEventListener('click', () => {
+                this.elements.coverImageInput.click();
+            });
+        }
 
-        this.elements.coverImageInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                this.handleCoverImageSelect(e.target.files[0]);
-            }
-        });
+        if (this.elements.coverImageInput) {
+            this.elements.coverImageInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    this.handleCoverImageSelect(e.target.files[0]);
+                }
+            });
+        }
 
-        this.elements.removeCoverBtn.addEventListener('click', () => {
-            this.clearCoverImage();
-        });
+        if (this.elements.removeCoverBtn) {
+            this.elements.removeCoverBtn.addEventListener('click', () => {
+                this.clearCoverImage();
+            });
+        }
 
         // 处理按钮
-        this.elements.processBtn.addEventListener('click', () => this.processFiles());
-        this.elements.clearBtn.addEventListener('click', () => this.clearAll());
+        if (this.elements.processBtn) {
+            this.elements.processBtn.addEventListener('click', () => this.processFiles());
+        }
+        
+        if (this.elements.clearBtn) {
+            this.elements.clearBtn.addEventListener('click', () => this.clearAll());
+        }
 
         // 拖拽支持
         this.setupDragDrop();

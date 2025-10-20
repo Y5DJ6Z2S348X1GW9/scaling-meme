@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件伪装工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 2rem;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .upload-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .upload-box {
+            border: 3px dashed #ccc;
+            border-radius: 15px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+        
+        .upload-box:hover {
+            border-color: #667eea;
+            background: #f0f0ff;
+            transform: translateY(-3px);
+        }
+        
+        .upload-box.has-file {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+        
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        
+        .upload-box h3 {
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: #333;
+        }
+        
+        .upload-box p {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .preview {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            display: none;
+            text-align: left;
+        }
+        
+        .preview.show {
+            display: block;
+        }
+        
+        .preview img {
+            max-width: 100%;
+            max-height: 150px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .preview-info {
+            font-size: 0.9rem;
+            color: #333;
+        }
+        
+        .preview-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            word-break: break-all;
+        }
+        
+        .preview-size {
+            color: #666;
+        }
+        
+        .controls {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .controls button {
+            margin: 0 10px;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+        }
+        
+        .info-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 10px;
+        }
+        
+        .info-box h4 {
+            margin-bottom: 15px;
+            color: #856404;
+            font-size: 1.1rem;
+        }
+        
+        .info-box ul {
+            color: #856404;
+            line-height: 2;
+            margin-left: 20px;
+        }
+        
+        .info-box strong {
+            color: #664d03;
+        }
+        
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        
+        .loading.show {
+            display: flex;
+        }
+        
+        .loading-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .upload-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls button {
+                display: block;
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📦 文件伪装工具</h1>
+        <p class="subtitle">将压缩包和视频文件伪装成图片</p>
+        
+        <div class="upload-grid">
+            <div class="upload-box" id="targetBox">
+                <div class="icon">📁</div>
+                <h3>要伪装的文件</h3>
+                <p>压缩包或视频文件</p>
+                <button type="button" onclick="document.getElementById('targetFile').click()">选择文件</button>
+                <input type="file" id="targetFile" hidden>
+                <div class="preview" id="targetPreview"></div>
+            </div>
+            
+            <div class="upload-box" id="coverBox">
+                <div class="icon">🖼️</div>
+                <h3>伪装用图片</h3>
+                <p>选择一张图片</p>
+                <button type="button" onclick="document.getElementById('coverFile').click()">选择图片</button>
+                <input type="file" id="coverFile" accept="image/*" hidden>
+                <div class="preview" id="coverPreview"></div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="processBtn" disabled onclick="startProcess()">🚀 开始伪装</button>
+            <button onclick="resetAll()">🔄 重置</button>
+        </div>
+        
+        <div class="info-box">
+            <h4>⚠️ 重要说明</h4>
+            <ul>
+                <li><strong>第一步：</strong>上传要伪装的压缩包或视频文件</li>
+                <li><strong>第二步：</strong>上传一张用于伪装的图片</li>
+                <li><strong>第三步：</strong>点击"开始伪装"，下载处理后的文件</li>
+                <li><strong>第四步：</strong>下载的文件名包含原扩展名提示（如 [改名为.zip]）</li>
+                <li><strong>使用方法：</strong>将文件扩展名改为提示的格式即可正常使用</li>
+                <li><strong>示例：</strong>myfile_[改名为.zip].jpg → 改为 → myfile.zip → 正常解压✅</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="loading" id="loading">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>正在处理文件...</p>
+        </div>
+    </div>
+    
+    <script>
+        let targetFile = null;
+        let coverFile = null;
+        
+        // 目标文件选择
+        document.getElementById('targetFile').addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                targetFile = e.target.files[0];
+                document.getElementById('targetBox').classList.add('has-file');
+                document.getElementById('targetPreview').innerHTML = 
+                    `<div class="preview-info">
+                        <div class="preview-name">📄 ${targetFile.name}</div>
+                        <div class="preview-size">${formatSize(targetFile.size)}</div>
+                    </div>`;
+                document.getElementById('targetPreview').classList.add('show');
+                updateButton();
+            }
+        });
+        
+        // 封面图片选择
+        document.getElementById('coverFile').addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                coverFile = e.target.files[0];
+                document.getElementById('coverBox').classList.add('has-file');
+                
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('coverPreview').innerHTML = 
+                        `<img src="${event.target.result}">
+                        <div class="preview-info">
+                            <div class="preview-name">🖼️ ${coverFile.name}</div>
+                            <div class="preview-size">${formatSize(coverFile.size)}</div>
+                        </div>`;
+                    document.getElementById('coverPreview').classList.add('show');
+                };
+                reader.readAsDataURL(coverFile);
+                updateButton();
+            }
+        });
+        
+        function updateButton() {
+            document.getElementById('processBtn').disabled = !(targetFile && coverFile);
+        }
+        
+        async function startProcess() {
+            if (!targetFile || !coverFile) {
+                alert('请选择两个文件！');
+                return;
+            }
+            
+            document.getElementById('loading').classList.add('show');
+            
+            try {
+                // 读取文件
+                const targetData = await readFile(targetFile);
+                const coverData = await readFile(coverFile);
+                
+                // 执行伪装
+                const result = await disguiseFile(targetData, coverData, targetFile.name);
+                
+                // 下载
+                downloadFile(result.blob, result.name);
+                
+                alert('✅ 处理完成！\n\n文件已下载！\n请按文件名中的提示改扩展名后使用。\n\n示例：\nmyfile_[改名为.zip].jpg → 改为 → myfile.zip');
+                
+                resetAll();
+                
+            } catch (error) {
+                console.error('处理失败:', error);
+                alert('❌ 处理失败：' + error.message);
+            } finally {
+                document.getElementById('loading').classList.remove('show');
+            }
+        }
+        
+        async function disguiseFile(targetData, coverData, originalName) {
+            const targetArray = new Uint8Array(targetData);
+            const coverArray = new Uint8Array(coverData);
+            
+            // 创建伪装文件：原始文件在前，图片在后
+            const totalSize = targetArray.length + coverArray.length;
+            const disguisedArray = new Uint8Array(totalSize);
+            
+            // 1. 写入原始文件数据
+            disguisedArray.set(targetArray, 0);
+            
+            // 2. 写入图片数据
+            disguisedArray.set(coverArray, targetArray.length);
+            
+            // 生成文件名
+            const ext = getFileExtension(originalName);
+            const baseName = originalName.substring(0, originalName.lastIndexOf('.')) || originalName;
+            const timestamp = Date.now().toString(36);
+            const newName = `${baseName}_disguised_${timestamp}_[改名为.${ext}].jpg`;
+            
+            return {
+                blob: new Blob([disguisedArray], { type: 'image/jpeg' }),
+                name: newName
+            };
+        }
+        
+        function readFile(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsArrayBuffer(file);
+            });
+        }
+        
+        function downloadFile(blob, filename) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        function getFileExtension(filename) {
+            return filename.slice((filename.lastIndexOf('.') - 1 >>> 0) + 2).toLowerCase();
+        }
+        
+        function formatSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        function resetAll() {
+            targetFile = null;
+            coverFile = null;
+            document.getElementById('targetFile').value = '';
+            document.getElementById('coverFile').value = '';
+            document.getElementById('targetBox').classList.remove('has-file');
+            document.getElementById('coverBox').classList.remove('has-file');
+            document.getElementById('targetPreview').classList.remove('show');
+            document.getElementById('coverPreview').classList.remove('show');
+            updateButton();
+        }
+        
+        console.log('文件伪装工具已就绪！');
+    </script>
+</body>
+</html>
