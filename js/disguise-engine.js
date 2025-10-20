@@ -67,121 +67,85 @@ class DisguiseEngine {
         }
     }
 
-    // 伪装为JPEG格式
+    // 伪装为JPEG格式（核心算法：原始文件在前，图片在后）
     async disguiseAsJPEG(originalData, coverData, metadata) {
         const coverArray = new Uint8Array(coverData);
         const originalArray = new Uint8Array(originalData);
         
-        // 查找JPEG结束标记位置
-        const endMarkerPos = this.findJPEGEndMarker(coverArray);
-        if (endMarkerPos === -1) {
-            throw new Error('无效的JPEG图片');
-        }
-
-        // 构建伪装文件
-        const totalSize = endMarkerPos + 2 + // JPEG数据（包含结束标记）
+        // 重要提示：此方法生成的文件，改回原扩展名后可直接使用
+        // 压缩包/视频软件会读取文件开头的有效数据
+        // 图片查看器可能无法显示（这是伪装的代价）
+        
+        const totalSize = originalArray.length + 
                          this.customSeparator.length +
-                         this.metadataMarker.length +
                          metadata.length +
-                         originalArray.length;
+                         coverArray.length;
 
         const disguisedArray = new Uint8Array(totalSize);
         let offset = 0;
 
-        // 1. 写入完整的JPEG数据（包括结束标记）
-        disguisedArray.set(coverArray.slice(0, endMarkerPos + 2), offset);
-        offset += endMarkerPos + 2;
+        // 1. 写入完整的原始文件数据（保持在开头，确保改名后可用）
+        disguisedArray.set(originalArray, offset);
+        offset += originalArray.length;
 
-        // 2. 写入自定义分隔符
+        // 2. 写入分隔符和元数据（用于识别）
         disguisedArray.set(this.customSeparator, offset);
         offset += this.customSeparator.length;
-
-        // 3. 写入元数据标记和元数据
-        disguisedArray.set(this.metadataMarker, offset);
-        offset += this.metadataMarker.length;
         disguisedArray.set(metadata, offset);
         offset += metadata.length;
 
-        // 4. 写入原始文件数据
-        disguisedArray.set(originalArray, offset);
+        // 3. 写入图片数据（追加在后面）
+        disguisedArray.set(coverArray, offset);
 
         return disguisedArray;
     }
 
-    // 伪装为PNG格式
+    // 伪装为PNG格式（核心算法：原始文件在前）
     async disguiseAsPNG(originalData, coverData, metadata) {
         const coverArray = new Uint8Array(coverData);
         const originalArray = new Uint8Array(originalData);
         
-        // 查找PNG IEND标记位置
-        const iendPos = this.findPNGIENDChunk(coverArray);
-        if (iendPos === -1) {
-            throw new Error('无效的PNG图片');
-        }
-
-        // 创建自定义PNG chunk来存储数据
-        const customChunk = this.createPNGChunk('prIv', new Uint8Array([
-            ...this.customSeparator,
-            ...this.metadataMarker,
-            ...metadata,
-            ...originalArray
-        ]));
-
-        // 构建伪装文件
-        const totalSize = iendPos + customChunk.length + 12; // 12是IEND chunk的大小
-        const disguisedArray = new Uint8Array(totalSize);
-        
-        // 1. 写入PNG数据直到IEND chunk之前
-        disguisedArray.set(coverArray.slice(0, iendPos), 0);
-        
-        // 2. 写入自定义chunk
-        disguisedArray.set(customChunk, iendPos);
-        
-        // 3. 写入IEND chunk
-        disguisedArray.set(coverArray.slice(iendPos, iendPos + 12), iendPos + customChunk.length);
-
-        return disguisedArray;
-    }
-
-    // 伪装为BMP格式
-    async disguiseAsBMP(originalData, coverData, metadata) {
-        const coverArray = new Uint8Array(coverData);
-        const originalArray = new Uint8Array(originalData);
-        
-        // 读取BMP文件头信息
-        if (coverArray[0] !== 0x42 || coverArray[1] !== 0x4D) {
-            throw new Error('无效的BMP图片');
-        }
-
-        // 获取BMP文件大小（小端序）
-        const fileSize = coverArray[2] | (coverArray[3] << 8) | 
-                        (coverArray[4] << 16) | (coverArray[5] << 24);
-
-        // 构建伪装文件
-        const totalSize = fileSize + 
+        // 与JPEG相同策略：原始文件在前，确保改名后可用
+        const totalSize = originalArray.length + 
                          this.customSeparator.length +
-                         this.metadataMarker.length +
                          metadata.length +
-                         originalArray.length;
+                         coverArray.length;
 
         const disguisedArray = new Uint8Array(totalSize);
         let offset = 0;
 
-        // 1. 写入完整的BMP数据
-        disguisedArray.set(coverArray.slice(0, fileSize), offset);
-        offset += fileSize;
-
-        // 2. 写入分隔符和数据
+        disguisedArray.set(originalArray, offset);
+        offset += originalArray.length;
         disguisedArray.set(this.customSeparator, offset);
         offset += this.customSeparator.length;
-        disguisedArray.set(this.metadataMarker, offset);
-        offset += this.metadataMarker.length;
         disguisedArray.set(metadata, offset);
         offset += metadata.length;
-        disguisedArray.set(originalArray, offset);
+        disguisedArray.set(coverArray, offset);
 
-        // 更新BMP文件头中的文件大小（不推荐，保持原始BMP完整性）
-        // 这里我们不更新，让BMP查看器只读取原始部分
+        return disguisedArray;
+    }
+
+    // 伪装为BMP格式（核心算法：原始文件在前）
+    async disguiseAsBMP(originalData, coverData, metadata) {
+        const coverArray = new Uint8Array(coverData);
+        const originalArray = new Uint8Array(originalData);
+        
+        // 与JPEG相同策略：原始文件在前，确保改名后可用
+        const totalSize = originalArray.length + 
+                         this.customSeparator.length +
+                         metadata.length +
+                         coverArray.length;
+
+        const disguisedArray = new Uint8Array(totalSize);
+        let offset = 0;
+
+        disguisedArray.set(originalArray, offset);
+        offset += originalArray.length;
+        disguisedArray.set(this.customSeparator, offset);
+        offset += this.customSeparator.length;
+        disguisedArray.set(metadata, offset);
+        offset += metadata.length;
+        disguisedArray.set(coverArray, offset);
 
         return disguisedArray;
     }
@@ -295,8 +259,10 @@ class DisguiseEngine {
     // 生成伪装后的文件名
     generateDisguisedFileName(originalName, format) {
         const baseName = Utils.getFileNameWithoutExtension(originalName);
+        const originalExt = Utils.getFileExtension(originalName);
         const timestamp = Date.now().toString(36);
-        return `${baseName}_disguised_${timestamp}.${format}`;
+        // 文件名包含原始扩展名信息，方便用户改回
+        return `${baseName}_disguised_${timestamp}_[改名为.${originalExt}].${format}`;
     }
 
     // 检测文件是否为伪装文件

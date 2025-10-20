@@ -78,6 +78,14 @@
                             <option value="bmp">BMP</option>
                         </select>
                     </div>
+                    <div class="important-notice" style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; color: white;">
+                        <h4 style="margin: 0 0 10px 0; font-size: 16px;">⚠️ 重要提示</h4>
+                        <p style="margin: 0; line-height: 1.6; font-size: 14px;">
+                            <strong>处理后的文件需要改名才能使用！</strong><br>
+                            下载的文件名会包含 <code style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 3px;">[改名为.zip]</code> 这样的提示<br>
+                            请将文件扩展名从 <code style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 3px;">.jpg/.png</code> 改为提示的扩展名即可正常使用
+                        </p>
+                    </div>
                 </div>
             </section>
 
@@ -119,17 +127,27 @@
                         <div class="help-item">
                             <img src="images/help-1.png" alt="步骤1">
                             <h3>1. 选择要伪装的文件</h3>
-                            <p>支持所有格式的压缩包和视频文件</p>
+                            <p>支持所有格式的压缩包和视频文件（ZIP/RAR/7Z/MP4/AVI等）</p>
                         </div>
                         <div class="help-item">
                             <img src="images/help-2.png" alt="步骤2">
-                            <h3>2. 选择伪装图片</h3>
-                            <p>可以使用预设图片或上传自定义图片</p>
+                            <h3>2. 处理并下载</h3>
+                            <p>选择伪装图片和输出格式，点击"开始伪装"</p>
                         </div>
                         <div class="help-item">
                             <img src="images/help-3.png" alt="步骤3">
-                            <h3>3. 下载伪装后的文件</h3>
-                            <p>将后缀名改回原格式即可正常使用</p>
+                            <h3>3. 改名即可使用</h3>
+                            <p><strong>重要：</strong>下载的文件名包含原扩展名提示（如[改名为.zip]），将整个文件重命名，把后缀改为提示的扩展名即可正常解压或播放</p>
+                        </div>
+                        <div class="help-note" style="margin-top: 30px; padding: 20px; background: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+                            <h4 style="color: #856404; margin-bottom: 10px;">💡 使用说明</h4>
+                            <ul style="color: #856404; line-height: 1.8;">
+                                <li><strong>伪装原理：</strong>将压缩包/视频数据放在文件开头，这样改名后可以直接使用</li>
+                                <li><strong>如何使用：</strong>下载后，将文件扩展名从 .jpg/.png 改为原始格式（.zip/.rar/.mp4等）</li>
+                                <li><strong>文件名提示：</strong>下载的文件名会显示"[改名为.xxx]"，按提示修改即可</li>
+                                <li><strong>兼容性：</strong>改名后所有压缩软件和视频播放器都能正常识别</li>
+                                <li><strong>示例：</strong>file_disguised_xxx_[改名为.zip].jpg → 改名为 → file.zip 即可解压</li>
+                            </ul>
                         </div>
                     </div>
                 </div>

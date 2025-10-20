@@ -260,7 +260,14 @@ class UIController {
         Utils.showLoading(false);
 
         if (successCount > 0) {
-            Utils.showToast(`成功处理 ${successCount} 个文件`, 'success');
+            Utils.showToast(`成功处理 ${successCount} 个文件！文件名包含[改名为.xxx]提示，按提示修改扩展名即可使用`, 'success', 8000);
+            
+            // 显示详细使用说明
+            setTimeout(() => {
+                if (confirm('✅ 文件处理完成！\n\n📌 重要提示：\n下载的文件名包含原扩展名提示（如"[改名为.zip]"）\n\n使用方法：\n1. 找到下载的文件\n2. 重命名文件，将后缀从 .jpg/.png 改为提示的扩展名\n3. 改名后即可正常解压或播放\n\n示例：\nfile_[改名为.zip].jpg → 改为 → file.zip\n\n是否查看详细帮助？')) {
+                    this.switchPage('help');
+                }
+            }, 1000);
         }
         if (errorCount > 0) {
             Utils.showToast(`${errorCount} 个文件处理失败`, 'error');
