@@ -23,35 +23,28 @@ class DisguiseEngine {
     // 伪装文件主函数
     async disguiseFile(originalFile, coverImageBlob, outputFormat = 'jpg') {
         try {
-            // 读取原始文件和封面图片
-            const [originalData, coverData] = await Promise.all([
-                Utils.readFileAsArrayBuffer(originalFile),
-                Utils.readFileAsArrayBuffer(coverImageBlob)
-            ]);
+            console.log(`开始处理文件: ${originalFile.name} (${(originalFile.size / 1024 / 1024).toFixed(2)} MB)`);
+            
+            // 读取原始文件和封面图片（顺序读取，避免内存峰值）
+            console.log('读取原始文件...');
+            const originalData = await Utils.readFileAsArrayBuffer(originalFile);
+            
+            console.log('读取封面图片...');
+            const coverData = await Utils.readFileAsArrayBuffer(coverImageBlob);
 
-            // 创建元数据
+            console.log('创建元数据...');
             const metadata = this.createMetadata(originalFile);
             
-            // 根据输出格式处理
-            let disguisedData;
-            switch (outputFormat) {
-                case 'jpg':
-                case 'jpeg':
-                    disguisedData = await this.disguiseAsJPEG(originalData, coverData, metadata);
-                    break;
-                case 'png':
-                    disguisedData = await this.disguiseAsPNG(originalData, coverData, metadata);
-                    break;
-                case 'bmp':
-                    disguisedData = await this.disguiseAsBMP(originalData, coverData, metadata);
-                    break;
-                default:
-                    throw new Error('不支持的输出格式');
-            }
+            // 根据输出格式处理（简化处理，直接拼接）
+            console.log('合并文件数据...');
+            const disguisedData = await this.disguiseSimple(originalData, coverData, metadata);
 
+            console.log('创建伪装文件...');
             // 创建伪装后的文件
             const disguisedBlob = new Blob([disguisedData], { type: `image/${outputFormat}` });
             const disguisedName = this.generateDisguisedFileName(originalFile.name, outputFormat);
+
+            console.log(`处理完成！输出文件: ${disguisedName} (${(disguisedBlob.size / 1024 / 1024).toFixed(2)} MB)`);
 
             return {
                 blob: disguisedBlob,
@@ -63,8 +56,41 @@ class DisguiseEngine {
 
         } catch (error) {
             console.error('文件伪装失败:', error);
+            if (error.name === 'QuotaExceededError') {
+                throw new Error('文件太大，浏览器内存不足');
+            }
             throw error;
         }
+    }
+
+    // 简化的伪装方法（适用于所有格式）
+    async disguiseSimple(originalData, coverData, metadata) {
+        const originalArray = new Uint8Array(originalData);
+        const coverArray = new Uint8Array(coverData);
+        
+        const totalSize = originalArray.length + 
+                         this.customSeparator.length +
+                         metadata.length +
+                         coverArray.length;
+
+        console.log(`分配内存: ${(totalSize / 1024 / 1024).toFixed(2)} MB`);
+        const disguisedArray = new Uint8Array(totalSize);
+        let offset = 0;
+
+        // 1. 写入原始文件数据
+        disguisedArray.set(originalArray, offset);
+        offset += originalArray.length;
+
+        // 2. 写入分隔符和元数据
+        disguisedArray.set(this.customSeparator, offset);
+        offset += this.customSeparator.length;
+        disguisedArray.set(metadata, offset);
+        offset += metadata.length;
+
+        // 3. 写入封面图片数据
+        disguisedArray.set(coverArray, offset);
+
+        return disguisedArray;
     }
 
     // 伪装为JPEG格式（核心算法：原始文件在前，图片在后）

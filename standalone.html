@@ -333,9 +333,28 @@
                 return;
             }
             
+            // 检查文件大小
+            const totalSize = targetFile.size + coverFile.size;
+            const fileSizeGB = (totalSize / (1024 * 1024 * 1024)).toFixed(2);
+            const fileSizeMB = (totalSize / (1024 * 1024)).toFixed(2);
+            
+            if (totalSize > 2 * 1024 * 1024 * 1024) {
+                alert(`⚠️ 文件太大 (${fileSizeGB} GB)\n\n由于浏览器内存限制，超过2GB的文件无法处理。\n\n建议：\n1. 使用较小的文件（<2GB）\n2. 分割大文件后分别处理`);
+                return;
+            }
+            
+            if (totalSize > 100 * 1024 * 1024) {
+                const sizeText = fileSizeGB >= 1 ? `${fileSizeGB} GB` : `${fileSizeMB} MB`;
+                if (!confirm(`文件总大小：${sizeText}\n\n处理大文件需要较长时间，是否继续？`)) {
+                    return;
+                }
+            }
+            
             document.getElementById('loading').classList.add('show');
             
             try {
+                console.log(`处理文件: ${targetFile.name} (${fileSizeMB} MB)`);
+                
                 // 读取文件
                 const targetData = await readFile(targetFile);
                 const coverData = await readFile(coverFile);
@@ -352,7 +371,13 @@
                 
             } catch (error) {
                 console.error('处理失败:', error);
-                alert('❌ 处理失败：' + error.message);
+                let errorMsg = '处理失败';
+                if (error.name === 'QuotaExceededError') {
+                    errorMsg = '文件太大，浏览器内存不足';
+                } else if (error.message) {
+                    errorMsg = '处理失败：' + error.message;
+                }
+                alert('❌ ' + errorMsg);
             } finally {
                 document.getElementById('loading').classList.remove('show');
             }

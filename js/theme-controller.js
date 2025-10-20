@@ -270,13 +270,10 @@ class ThemeController {
         return this.themes[this.currentTheme];
     }
 
-    // 预加载主题资源
+    // 预加载主题资源（已禁用，不需要额外图片）
     preloadThemeAssets() {
-        // 预加载主题相关的图片资源
-        Object.keys(this.themes).forEach(themeName => {
-            const img = new Image();
-            img.src = `images/theme-${themeName}-bg.jpg`;
-        });
+        // 不再预加载主题背景图片，节省资源
+        return;
     }
 
     // 创建自定义主题

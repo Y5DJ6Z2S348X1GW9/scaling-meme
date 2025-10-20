@@ -221,10 +221,28 @@ class UIController {
             return;
         }
 
-        Utils.showLoading(true, '正在处理文件...');
+        // 检查文件大小
+        const totalSize = this.targetFile.size + this.coverImage.size;
+        const fileSizeMB = (totalSize / (1024 * 1024)).toFixed(2);
+        const fileSizeGB = (totalSize / (1024 * 1024 * 1024)).toFixed(2);
+        
+        // 浏览器内存限制警告
+        if (totalSize > 2 * 1024 * 1024 * 1024) { // 超过2GB
+            alert(`⚠️ 文件太大 (${fileSizeGB} GB)\n\n由于浏览器内存限制，超过2GB的文件可能无法处理。\n\n建议：\n1. 使用较小的文件进行测试\n2. 尝试使用 standalone.html（更简洁）\n3. 或分割大文件后分别处理`);
+            return;
+        }
+        
+        if (totalSize > 100 * 1024 * 1024) { // 超过100MB
+            const sizeText = fileSizeGB >= 1 ? `${fileSizeGB} GB` : `${fileSizeMB} MB`;
+            if (!confirm(`文件总大小约 ${sizeText}\n\n处理大文件可能需要较长时间，且可能因浏览器内存不足而失败。\n\n是否继续？`)) {
+                return;
+            }
+        }
+
+        Utils.showLoading(true, `正在处理文件 (${fileSizeGB} GB)...`);
 
         try {
-            const outputFormat = this.elements.outputFormat.value;
+            const outputFormat = this.elements.outputFormat.value || 'jpg';
             
             // 执行伪装
             const result = await window.disguiseEngine.disguiseFile(
@@ -233,13 +251,15 @@ class UIController {
                 outputFormat
             );
 
+            Utils.showLoading(false);
+
             // 自动下载
             Utils.downloadFile(result.blob, result.name);
 
             // 添加到历史
-            window.historyManager.addRecord(this.targetFile, result);
-
-            Utils.showLoading(false);
+            if (window.historyManager) {
+                window.historyManager.addRecord(this.targetFile, result);
+            }
             
             // 显示使用说明
             Utils.showToast('✅ 处理成功！文件名包含使用提示，按提示改名即可使用', 'success', 6000);
@@ -253,8 +273,19 @@ class UIController {
         } catch (error) {
             console.error('处理文件失败:', error);
             Utils.showLoading(false);
-            Utils.showToast('处理失败：' + (error.message || '未知错误'), 'error');
-            window.historyManager.addFailureRecord(this.targetFile, error);
+            
+            let errorMsg = '处理失败';
+            if (error.name === 'QuotaExceededError') {
+                errorMsg = '文件太大，浏览器内存不足';
+            } else if (error.message) {
+                errorMsg = '处理失败：' + error.message;
+            }
+            
+            Utils.showToast(errorMsg, 'error', 5000);
+            
+            if (window.historyManager) {
+                window.historyManager.addFailureRecord(this.targetFile, error);
+            }
         }
     }
 
