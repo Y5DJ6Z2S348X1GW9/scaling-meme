@@ -102,20 +102,30 @@ class FileHandler {
         const category = this.getFileCategory(filename);
         
         if (category === 'archive') {
-            if (['zip', 'rar', '7z'].includes(extension)) {
-                return `file-icon-${extension}`;
-            }
-            return 'file-icon-zip';
+            return 'file-icon-archive';
         } else if (category === 'video') {
-            if (['mp4', 'avi', 'mkv'].includes(extension)) {
-                return `file-icon-${extension}`;
-            }
             return 'file-icon-video';
         } else if (category === 'image') {
             return 'file-icon-image';
         }
         
         return 'file-icon-unknown';
+    }
+    
+    // 获取文件图标Emoji
+    getFileIconEmoji(filename) {
+        const extension = Utils.getFileExtension(filename);
+        const category = this.getFileCategory(filename);
+        
+        if (category === 'archive') {
+            return '📦';
+        } else if (category === 'video') {
+            return '🎬';
+        } else if (category === 'image') {
+            return '🖼️';
+        }
+        
+        return '📄';
     }
 
     // 批量添加文件

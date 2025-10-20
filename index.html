@@ -39,37 +39,45 @@
         <main class="main-content">
             <!-- 伪装页面 -->
             <section class="page-section active" id="disguisePage">
-                <div class="upload-area" id="uploadArea">
-                    <div class="upload-icon">
-                        <img src="images/upload-icon.png" alt="上传">
+                <div class="dual-upload-container">
+                    <div class="upload-section">
+                        <h3>📦 第一步：上传要伪装的文件</h3>
+                        <div class="upload-area" id="targetFileArea">
+                            <div class="upload-icon">📁</div>
+                            <h2>压缩包或视频文件</h2>
+                            <p>支持 ZIP/RAR/7Z/MP4/AVI/MKV 等所有格式</p>
+                            <input type="file" id="targetFileInput" hidden>
+                            <button class="select-file-btn" id="selectTargetBtn">选择文件</button>
+                        </div>
+                        <div class="file-preview" id="targetFilePreview" style="display: none;">
+                            <div class="preview-info">
+                                <span class="preview-icon">📄</span>
+                                <div class="preview-text">
+                                    <div class="preview-name" id="targetFileName">未选择文件</div>
+                                    <div class="preview-size" id="targetFileSize">0 B</div>
+                                </div>
+                                <button class="remove-preview-btn" id="removeTargetBtn">✕</button>
+                            </div>
+                        </div>
                     </div>
-                    <h2>拖拽文件到这里</h2>
-                    <p>或者点击选择文件</p>
-                    <input type="file" id="fileInput" multiple hidden>
-                    <button class="select-file-btn" id="selectFileBtn">选择文件</button>
-                </div>
 
-                <div class="file-list" id="fileList" style="display: none;">
-                    <h3>待处理文件</h3>
-                    <div class="file-items" id="fileItems"></div>
-                    <div class="action-buttons">
-                        <button class="process-btn" id="processBtn">开始伪装</button>
-                        <button class="clear-btn" id="clearBtn">清空列表</button>
+                    <div class="upload-section">
+                        <h3>🖼️ 第二步：上传伪装用的图片</h3>
+                        <div class="upload-area" id="coverImageArea">
+                            <div class="upload-icon">🎨</div>
+                            <h2>选择封面图片</h2>
+                            <p>支持 JPG/PNG/BMP 图片文件</p>
+                            <input type="file" id="coverImageInput" accept="image/*" hidden>
+                            <button class="select-file-btn" id="selectCoverBtn">选择图片</button>
+                        </div>
+                        <div class="image-preview" id="coverImagePreview" style="display: none;">
+                            <img id="coverImageThumbnail" style="max-width: 100%; max-height: 200px; border-radius: 8px;">
+                            <button class="remove-preview-btn" id="removeCoverBtn">✕</button>
+                        </div>
                     </div>
                 </div>
 
                 <div class="settings-panel">
-                    <h3>伪装设置</h3>
-                    <div class="setting-item">
-                        <label>选择伪装图片：</label>
-                        <select id="disguiseImageSelect">
-                            <option value="default">默认风景图</option>
-                            <option value="nature">自然风光</option>
-                            <option value="abstract">抽象艺术</option>
-                            <option value="custom">自定义图片</option>
-                        </select>
-                        <input type="file" id="customImageInput" accept="image/*" style="display: none;">
-                    </div>
                     <div class="setting-item">
                         <label>输出格式：</label>
                         <select id="outputFormat">
@@ -78,12 +86,16 @@
                             <option value="bmp">BMP</option>
                         </select>
                     </div>
+                    <div class="action-buttons">
+                        <button class="process-btn" id="processBtn" disabled>🚀 开始伪装</button>
+                        <button class="clear-btn" id="clearBtn">🗑️ 重新选择</button>
+                    </div>
                     <div class="important-notice" style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; color: white;">
-                        <h4 style="margin: 0 0 10px 0; font-size: 16px;">⚠️ 重要提示</h4>
+                        <h4 style="margin: 0 0 10px 0; font-size: 16px;">⚠️ 使用说明</h4>
                         <p style="margin: 0; line-height: 1.6; font-size: 14px;">
-                            <strong>处理后的文件需要改名才能使用！</strong><br>
-                            下载的文件名会包含 <code style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 3px;">[改名为.zip]</code> 这样的提示<br>
-                            请将文件扩展名从 <code style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 3px;">.jpg/.png</code> 改为提示的扩展名即可正常使用
+                            <strong>1. 上传两个文件</strong>：要伪装的压缩包/视频 + 伪装用的图片<br>
+                            <strong>2. 点击处理</strong>：生成伪装文件并下载<br>
+                            <strong>3. 改名使用</strong>：将下载文件的扩展名改为文件名中提示的格式即可使用
                         </p>
                     </div>
                 </div>

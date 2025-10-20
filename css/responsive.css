@@ -47,13 +47,17 @@
         font-size: 0.875rem;
     }
     
+    .dual-upload-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
     .upload-area {
         padding: 2rem;
     }
     
-    .upload-icon img {
-        width: 60px;
-        height: 60px;
+    .upload-icon {
+        font-size: 2.5rem;
     }
     
     .settings-panel {
@@ -83,6 +87,11 @@
     .main-content {
         max-width: 540px;
         padding: 1rem;
+    }
+    
+    .dual-upload-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
     }
     
     .site-title {
@@ -158,6 +167,23 @@
     
     .main-content {
         padding: 0.75rem;
+    }
+    
+    .dual-upload-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .upload-section {
+        padding: 1rem;
+    }
+    
+    .upload-area {
+        padding: 1.5rem 1rem;
+    }
+    
+    .upload-icon {
+        font-size: 2rem;
     }
     
     .logo-container {
