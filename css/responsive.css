@@ -1,0 +1,373 @@
+/* 响应式设计样式 */
+
+/* 大屏幕 (1400px+) */
+@media (min-width: 1400px) {
+    .main-content {
+        max-width: 1320px;
+    }
+}
+
+/* 桌面端 (1200px - 1399px) */
+@media (max-width: 1399px) and (min-width: 1200px) {
+    .main-content {
+        max-width: 1140px;
+    }
+}
+
+/* 小型桌面端 (992px - 1199px) */
+@media (max-width: 1199px) and (min-width: 992px) {
+    .main-content {
+        max-width: 960px;
+    }
+    
+    .upload-area {
+        padding: 2.5rem;
+    }
+}
+
+/* 平板端 (768px - 991px) */
+@media (max-width: 991px) and (min-width: 768px) {
+    .main-content {
+        max-width: 720px;
+        padding: 1.5rem;
+    }
+    
+    .logo-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .main-nav {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    
+    .nav-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.875rem;
+    }
+    
+    .upload-area {
+        padding: 2rem;
+    }
+    
+    .upload-icon img {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .settings-panel {
+        padding: 1.5rem;
+    }
+    
+    .setting-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .setting-item label {
+        margin-bottom: 0.5rem;
+    }
+    
+    select {
+        width: 100%;
+    }
+}
+
+/* 大型手机端 (576px - 767px) */
+@media (max-width: 767px) and (min-width: 576px) {
+    .main-header {
+        padding: 1rem 1.5rem;
+    }
+    
+    .main-content {
+        max-width: 540px;
+        padding: 1rem;
+    }
+    
+    .site-title {
+        font-size: 1.25rem;
+    }
+    
+    .logo {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .main-nav {
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 1rem;
+    }
+    
+    .nav-btn {
+        flex: 1;
+        padding: 0.5rem;
+        font-size: 0.75rem;
+    }
+    
+    .theme-toggle {
+        position: absolute;
+        right: 1.5rem;
+        top: 1rem;
+    }
+    
+    .upload-area {
+        padding: 1.5rem;
+    }
+    
+    .upload-area h2 {
+        font-size: 1.25rem;
+    }
+    
+    .upload-area p {
+        font-size: 0.875rem;
+    }
+    
+    .file-list,
+    .settings-panel {
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .action-buttons button {
+        width: 100%;
+    }
+    
+    .help-content {
+        flex-direction: column;
+    }
+    
+    .help-item {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+}
+
+/* 小型手机端 (小于 576px) */
+@media (max-width: 575px) {
+    .main-header {
+        padding: 0.75rem 1rem;
+    }
+    
+    .main-content {
+        padding: 0.75rem;
+    }
+    
+    .logo-container {
+        gap: 0.5rem;
+    }
+    
+    .site-title {
+        font-size: 1.1rem;
+    }
+    
+    .logo {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .main-nav {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 0.25rem;
+        padding: 0.5rem 0;
+    }
+    
+    .nav-btn {
+        white-space: nowrap;
+        padding: 0.4rem 0.6rem;
+        font-size: 0.7rem;
+        flex-shrink: 0;
+    }
+    
+    .theme-toggle {
+        display: none;
+    }
+    
+    .upload-area {
+        padding: 1.25rem;
+        border-radius: var(--radius-md);
+    }
+    
+    .upload-icon img {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .upload-area h2 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .upload-area p {
+        font-size: 0.8rem;
+    }
+    
+    .select-file-btn,
+    .process-btn {
+        padding: 0.6rem 1.25rem;
+        font-size: 0.875rem;
+    }
+    
+    .file-list,
+    .settings-panel,
+    .batch-container,
+    .history-container,
+    .help-container {
+        padding: 1.25rem;
+        margin-top: 1rem;
+        border-radius: var(--radius-md);
+    }
+    
+    .file-list h3,
+    .settings-panel h3,
+    .batch-container h2,
+    .history-container h2,
+    .help-container h2 {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .file-item {
+        padding: 0.75rem;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .file-icon {
+        width: 32px;
+        height: 32px;
+        margin-bottom: 0.5rem;
+    }
+    
+    .file-status {
+        width: 100%;
+        justify-content: space-between;
+        margin-top: 0.5rem;
+    }
+    
+    .setting-item {
+        margin-bottom: 1rem;
+    }
+    
+    .setting-item label {
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    select {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+    }
+    
+    .toast {
+        bottom: 1rem;
+        right: 1rem;
+        left: 1rem;
+        max-width: none;
+        font-size: 0.875rem;
+        padding: 0.75rem 1rem;
+    }
+    
+    .loading-spinner {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .loading-text {
+        font-size: 0.875rem;
+    }
+    
+    .batch-upload {
+        padding: 2rem 1rem;
+    }
+    
+    .batch-upload img {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .batch-upload p {
+        font-size: 0.875rem;
+    }
+    
+    .history-controls {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .history-controls button {
+        width: 100%;
+        font-size: 0.875rem;
+    }
+    
+    .help-item {
+        margin-bottom: 1.5rem;
+    }
+    
+    .help-item img {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 0.75rem;
+    }
+    
+    .help-item h3 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .help-item p {
+        font-size: 0.875rem;
+    }
+    
+    .main-footer {
+        padding: 1.5rem 1rem;
+        font-size: 0.8rem;
+    }
+}
+
+/* 横屏手机特殊处理 */
+@media (max-height: 500px) and (orientation: landscape) {
+    .main-header {
+        position: relative;
+        padding: 0.5rem 1rem;
+    }
+    
+    .logo-container {
+        display: none;
+    }
+    
+    .main-nav {
+        margin-top: 0;
+    }
+    
+    .upload-area {
+        padding: 1rem;
+    }
+    
+    .upload-icon {
+        display: none;
+    }
+}
+
+/* 暗色模式响应式调整 */
+@media (prefers-color-scheme: dark) {
+    .toast {
+        background-color: #1f2937;
+        color: #f3f4f6;
+    }
+    
+    .loading-overlay {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+}

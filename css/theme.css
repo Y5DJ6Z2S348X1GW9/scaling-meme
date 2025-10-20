@@ -1,0 +1,215 @@
+/* 主题样式 - 支持明暗主题切换 */
+
+/* 暗色主题 */
+body.dark-theme {
+    --primary-color: #818cf8;
+    --secondary-color: #a78bfa;
+    --background-color: #0f172a;
+    --surface-color: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+/* 自动适配系统主题 */
+@media (prefers-color-scheme: dark) {
+    body:not(.light-theme) {
+        --primary-color: #818cf8;
+        --secondary-color: #a78bfa;
+        --background-color: #0f172a;
+        --surface-color: #1e293b;
+        --text-primary: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --border-color: #334155;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* 高对比度主题 */
+body.high-contrast {
+    --primary-color: #0066cc;
+    --secondary-color: #0052a3;
+    --background-color: #ffffff;
+    --surface-color: #f0f0f0;
+    --text-primary: #000000;
+    --text-secondary: #333333;
+    --border-color: #666666;
+}
+
+/* 彩虹主题 */
+body.rainbow-theme {
+    --primary-color: #ff6b6b;
+    --secondary-color: #4ecdc4;
+    --background-color: #fff5f5;
+    --surface-color: #ffffff;
+    --text-primary: #2d3436;
+    --text-secondary: #636e72;
+    --border-color: #ffeaa7;
+}
+
+/* 主题过渡动画 */
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body * {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* 特定组件的暗色主题样式 */
+.dark-theme .upload-area {
+    background-color: #1e293b;
+    border-color: #475569;
+}
+
+.dark-theme .upload-area:hover {
+    background-color: rgba(129, 140, 248, 0.1);
+    border-color: #818cf8;
+}
+
+.dark-theme select {
+    background-color: #334155;
+    border-color: #475569;
+    color: #f1f5f9;
+}
+
+.dark-theme select:focus {
+    border-color: #818cf8;
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+}
+
+.dark-theme .file-item {
+    background-color: #1e293b;
+}
+
+.dark-theme .file-item:hover {
+    background-color: rgba(129, 140, 248, 0.1);
+}
+
+.dark-theme .nav-btn:hover {
+    background-color: rgba(129, 140, 248, 0.2);
+}
+
+.dark-theme .toast {
+    background-color: #334155;
+    color: #f1f5f9;
+}
+
+/* 主题切换按钮样式 */
+.theme-selector {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    background-color: var(--surface-color);
+    border-radius: var(--radius-lg);
+    padding: 0.5rem;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    gap: 0.5rem;
+    z-index: 100;
+}
+
+.theme-option {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    position: relative;
+}
+
+.theme-option:hover {
+    transform: scale(1.1);
+}
+
+.theme-option.active::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+}
+
+.theme-light {
+    background-color: #f9fafb;
+    border: 2px solid #e5e7eb;
+}
+
+.theme-dark {
+    background-color: #1e293b;
+    border: 2px solid #475569;
+}
+
+.theme-rainbow {
+    background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #ffe66d);
+}
+
+.theme-high-contrast {
+    background-color: #000000;
+    border: 2px solid #ffffff;
+}
+
+/* 渐变背景效果 */
+body.gradient-bg {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+body.gradient-bg .main-header,
+body.gradient-bg .main-footer {
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+}
+
+body.gradient-bg .upload-area,
+body.gradient-bg .file-list,
+body.gradient-bg .settings-panel {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+}
+
+/* 玻璃态效果 */
+body.glass-theme {
+    background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+}
+
+body.glass-theme .main-header,
+body.glass-theme .upload-area,
+body.glass-theme .file-list,
+body.glass-theme .settings-panel {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* 节日主题 */
+body.holiday-theme {
+    background-color: #1a472a;
+    --primary-color: #dc2626;
+    --secondary-color: #16a34a;
+    --surface-color: #2d5a3d;
+    --text-primary: #f0fdf4;
+}
+
+/* 主题动画效果 */
+@keyframes themeTransition {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+body.theme-transitioning * {
+    animation: themeTransition 0.3s ease-out;
+}

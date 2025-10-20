@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件伪装大师 - 安全隐藏你的文件</title>
+    
+    <!-- 样式文件 -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/icons.css">
+    
+    <!-- 图标 -->
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 头部导航 -->
+        <header class="main-header">
+            <div class="logo-container">
+                <img src="images/logo.png" alt="Logo" class="logo">
+                <h1 class="site-title">文件伪装大师</h1>
+            </div>
+            <nav class="main-nav">
+                <button class="nav-btn active" data-page="disguise">伪装文件</button>
+                <button class="nav-btn" data-page="batch">批量处理</button>
+                <button class="nav-btn" data-page="history">历史记录</button>
+                <button class="nav-btn" data-page="help">使用帮助</button>
+                <button class="theme-toggle" id="themeToggle">
+                    <img src="images/theme-icon.png" alt="主题">
+                </button>
+            </nav>
+        </header>
+
+        <!-- 主要内容区域 -->
+        <main class="main-content">
+            <!-- 伪装页面 -->
+            <section class="page-section active" id="disguisePage">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">
+                        <img src="images/upload-icon.png" alt="上传">
+                    </div>
+                    <h2>拖拽文件到这里</h2>
+                    <p>或者点击选择文件</p>
+                    <input type="file" id="fileInput" multiple hidden>
+                    <button class="select-file-btn" id="selectFileBtn">选择文件</button>
+                </div>
+
+                <div class="file-list" id="fileList" style="display: none;">
+                    <h3>待处理文件</h3>
+                    <div class="file-items" id="fileItems"></div>
+                    <div class="action-buttons">
+                        <button class="process-btn" id="processBtn">开始伪装</button>
+                        <button class="clear-btn" id="clearBtn">清空列表</button>
+                    </div>
+                </div>
+
+                <div class="settings-panel">
+                    <h3>伪装设置</h3>
+                    <div class="setting-item">
+                        <label>选择伪装图片：</label>
+                        <select id="disguiseImageSelect">
+                            <option value="default">默认风景图</option>
+                            <option value="nature">自然风光</option>
+                            <option value="abstract">抽象艺术</option>
+                            <option value="custom">自定义图片</option>
+                        </select>
+                        <input type="file" id="customImageInput" accept="image/*" style="display: none;">
+                    </div>
+                    <div class="setting-item">
+                        <label>输出格式：</label>
+                        <select id="outputFormat">
+                            <option value="jpg">JPG</option>
+                            <option value="png">PNG</option>
+                            <option value="bmp">BMP</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 批量处理页面 -->
+            <section class="page-section" id="batchPage" style="display: none;">
+                <div class="batch-container">
+                    <h2>批量文件处理</h2>
+                    <div class="batch-upload" id="batchUpload">
+                        <img src="images/batch-icon.png" alt="批量上传">
+                        <p>拖拽文件夹或多个文件到这里</p>
+                        <button class="batch-select-btn" id="batchSelectBtn">选择文件夹</button>
+                    </div>
+                    <div class="batch-progress" id="batchProgress" style="display: none;">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <p class="progress-text" id="progressText">处理中...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 历史记录页面 -->
+            <section class="page-section" id="historyPage" style="display: none;">
+                <div class="history-container">
+                    <h2>处理历史</h2>
+                    <div class="history-controls">
+                        <button class="clear-history-btn" id="clearHistoryBtn">清空历史</button>
+                        <button class="export-history-btn" id="exportHistoryBtn">导出记录</button>
+                    </div>
+                    <div class="history-list" id="historyList"></div>
+                </div>
+            </section>
+
+            <!-- 帮助页面 -->
+            <section class="page-section" id="helpPage" style="display: none;">
+                <div class="help-container">
+                    <h2>使用指南</h2>
+                    <div class="help-content">
+                        <div class="help-item">
+                            <img src="images/help-1.png" alt="步骤1">
+                            <h3>1. 选择要伪装的文件</h3>
+                            <p>支持所有格式的压缩包和视频文件</p>
+                        </div>
+                        <div class="help-item">
+                            <img src="images/help-2.png" alt="步骤2">
+                            <h3>2. 选择伪装图片</h3>
+                            <p>可以使用预设图片或上传自定义图片</p>
+                        </div>
+                        <div class="help-item">
+                            <img src="images/help-3.png" alt="步骤3">
+                            <h3>3. 下载伪装后的文件</h3>
+                            <p>将后缀名改回原格式即可正常使用</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="main-footer">
+            <p>&copy; 2025 文件伪装大师 - 保护你的隐私</p>
+        </footer>
+    </div>
+
+    <!-- 提示框 -->
+    <div class="toast" id="toast"></div>
+
+    <!-- 加载动画 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">处理中...</p>
+    </div>
+
+    <!-- JavaScript文件 -->
+    <script src="js/utils.js"></script>
+    <script src="js/file-handler.js"></script>
+    <script src="js/disguise-engine.js"></script>
+    <script src="js/ui-controller.js"></script>
+    <script src="js/batch-processor.js"></script>
+    <script src="js/history-manager.js"></script>
+    <script src="js/theme-controller.js"></script>
+    <script src="js/drag-drop.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
